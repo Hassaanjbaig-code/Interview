@@ -2,9 +2,60 @@ import React from 'react';
 import Search from '../components/Search';
 import Table from '../components/Table';
 import CreateOrganization from '../components/CreateOrganization';
+import useForm from "./../hooks/useForm"
+
+
+interface inputFields {
+  id: number,
+  name: string,
+  type: string,
+  placeholder: string
+  option: boolean | null
+}
 
 const OrganizationsPage = () => {
   const [openCreateOrganization, setOpenCreateOrganization] = React.useState(false)
+  const tableHaed = [
+    "Name",
+    "City",
+    "Phone"
+  ]
+  const data = [
+    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  ]
+
+  const inputFields: inputFields[] = [
+    { id: 1, name: 'name', type: 'text', placeholder: 'Name', option: false },
+    { id: 2, name: 'email', type: 'email', placeholder: 'Email', option: false },
+    { id: 3, name: 'phone', type: 'text', placeholder: 'Phone', option: false },
+    { id: 4, name: 'address', type: 'text', placeholder: 'Address', option: false },
+    { id: 5, name: 'city', type: 'text', placeholder: 'City', option: false },
+    { id: 6, name: 'province', type: 'text', placeholder: 'Province', option: false },
+    { id: 7, name: 'country', type: 'text', placeholder: 'Country', option: true },
+    { id: 8, name: 'postalCode', type: 'text', placeholder: 'Postal Code', option: false },
+  ];
+
+  const { values, handleChange } = useForm({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    province: '',
+    country: '',
+    postalCode: '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Submitted:', values);
+    // Add submission logic here (e.g., API call)
+  };
   return (
     <section className="flex-1 p-6">
       <div className="flex items-center justify-between mb-4">
@@ -12,13 +63,18 @@ const OrganizationsPage = () => {
       </div>
 
       <div className="p-6">
-          <Search
-            onSearch={(searchTerm) => console.log(searchTerm)}
-            buttonClick={setOpenCreateOrganization}
-            valueButton={openCreateOrganization}
-          />
+        <Search
+          onSearch={(searchTerm) => console.log(searchTerm)}
+          buttonClick={setOpenCreateOrganization}
+          valueButton={openCreateOrganization}
+          button="Create Organization"
+        />
         <div className="overflow-x-auto rounded-sm bg-white shadow-sm">
-          <Table />
+          <Table
+            data={data}
+            tableHead={tableHaed}
+            link="/organization/1/edit"
+          />
         </div>
 
         <div className="py-3 flex items-center justify-between">
@@ -56,6 +112,11 @@ const OrganizationsPage = () => {
       {openCreateOrganization && (
         <CreateOrganization
           buttonClick={setOpenCreateOrganization}
+          inputFields={inputFields}
+          values={values}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          buttonString="Create Organization"
         />
       )}
     </section>

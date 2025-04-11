@@ -34,7 +34,7 @@ const Navbar = () => {
     },
   ];
   return (
-    <nav className="bg-[#2f365f] w-64 text-white flex flex-col overflow-y-auto py-4 h-screen p-12 shrink-0">
+    <nav className="bg-[#2f365f] w-64 text-white flex flex-col overflow-y-auto py-4 h-screen min-h-full p-12 shrink-0">
       <ul>
         {navbar.map((item) => (
           <li

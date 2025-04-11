@@ -5,10 +5,11 @@ interface SearchProps {
     onSearch: (searchTerm: string) => void;
     buttonClick?: React.Dispatch<React.SetStateAction<boolean>>;
     valueButton: boolean;
+    button: string
 }
 
 const Search = (props: SearchProps) => {
-    const { onSearch, buttonClick, valueButton } = props
+    const { onSearch, buttonClick, valueButton, button } = props
     const [search, setSearch] = React.useState('')
     return (
         <div className="flex items-center justify-between mb-4">
@@ -49,7 +50,7 @@ const Search = (props: SearchProps) => {
                 className={` hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm ${valueButton ? 'bg-red-600' : 'bg-indigo-600'}`}
                 onClick={() => buttonClick?.(!valueButton)}
             >
-                Create Organization
+                {button}
             </button>
         </div>
     )

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NoFound";
 import Organizations from "./pages/Organizations";
 import OrganizationEditPage from "./pages/OrganizationEditPage"
+import ContactEditPages from "./pages/ContactEditPages";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/organizations" element={<Organizations />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/organizations/:id/edit" element={<OrganizationEditPage />} />
+            <Route path="/contact/:id/edit" element={<ContactEditPages />} />
             <Route path="*" element={<NotFound />} /> 
           </Routes>
         </div>
