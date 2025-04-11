@@ -46,7 +46,7 @@ const Search = (props: SearchProps) => {
                 </button>
             </div>
             <button
-                className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm"
+                className={` hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-sm ${valueButton ? 'bg-red-600' : 'bg-indigo-600'}`}
                 onClick={() => buttonClick?.(!valueButton)}
             >
                 Create Organization

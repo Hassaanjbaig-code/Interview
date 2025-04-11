@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+:root {
+  --main-screen: "#e5e7eb";
+}
+
 html {
   margin: 0;
   padding: 0;

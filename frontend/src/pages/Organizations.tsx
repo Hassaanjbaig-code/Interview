@@ -53,7 +53,11 @@ const OrganizationsPage = () => {
           </div>
         </div>
       </div>
-      <CreateOrganization />
+      {openCreateOrganization && (
+        <CreateOrganization
+          buttonClick={setOpenCreateOrganization}
+        />
+      )}
     </section>
   );
 };
