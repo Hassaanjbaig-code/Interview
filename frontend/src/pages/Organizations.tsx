@@ -57,12 +57,12 @@ const OrganizationsPage = () => {
     // Add submission logic here (e.g., API call)
   };
   return (
-    <section className="flex-1 p-6">
+    <section className="flex-1 md:p-6 p-2">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold text-gray-800">Organizations</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Organizations</h1>
       </div>
 
-      <div className="p-6">
+      <div className="md:p-6 p-2">
         <Search
           onSearch={(searchTerm) => console.log(searchTerm)}
           buttonClick={setOpenCreateOrganization}

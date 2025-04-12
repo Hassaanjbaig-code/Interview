@@ -13,12 +13,13 @@ interface FormType {
     }[];
     values: Record<string, string>;
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    className?: string;
 }
 
 
-const Form = ({ inputFields, values, onChange }: FormType) => {
+const Form = ({ inputFields, values, onChange, className= "" }: FormType) => {
     return (
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div className={`${className} grid grid-cols-1 md:grid-cols-2 gap-4`}>
             {inputFields.map((field) =>
                 field.option === false ? (
                     <Input

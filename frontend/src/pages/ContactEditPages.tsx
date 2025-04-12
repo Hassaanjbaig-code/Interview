@@ -55,9 +55,8 @@ const ContactEditPages = () => {
             </div>
 
             <div className="max-w-3xl overflow-hidden rounded-sm bg-white shadow-sm">
-                <form onSubmit={handleSubmit} className="-mb-8 -mr-6 flex flex-wrap p-8">
-                    <div></div>
-                    <Form inputFields={inputFields} values={values} onChange={handleChange} />
+                <form onSubmit={handleSubmit} className="flex flex-wrap">
+                    <Form className='p-8' inputFields={inputFields} values={values} onChange={handleChange} />
                     <div className="flex justify-between mt-6 w-full p-4 bg-[#f3f4f6]">
                         <button className="text-red-500 hover:text-red-700 focus:outline-none">
                             Delete Organization

@@ -13,16 +13,16 @@ function App() {
   return (
     <BrowserRouter>
       <TopNavbar />
-      <div className="flex">
+      <div className="flex min-h-screen">
         <Navbar />
-        <div className="container mx-auto bg-[#e5e7eb]">
+        <div className="flex-1 w-full bg-[#e5e7eb] md:p-6 p-1.5">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/organizations" element={<Organizations />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/organizations/:id/edit" element={<OrganizationEditPage />} />
             <Route path="/contact/:id/edit" element={<ContactEditPages />} />
-            <Route path="*" element={<NotFound />} /> 
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>
