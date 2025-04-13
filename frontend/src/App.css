@@ -1,6 +1,28 @@
 @import "tailwindcss";
 
+:root {
+  --main-screen: "#e5e7eb";
+  --myColor: "#191e38";
+}
+
 html {
   margin: 0;
   padding: 0;
+}
+
+.fixBackaground {
+  position: fixed;
+  inset: 0px;
+  z-index: 99998;
+  background: black;
+  opacity: 0.2;
+}
+
+.navStyle {
+  position: absolute;
+  z-index: 99999;
+  inset: 0px 0px auto auto;
+  margin: 0px;
+  transform: translate3d(-24px, 44.1905px, 0px);
+  background-color: #2f365f;
 }
