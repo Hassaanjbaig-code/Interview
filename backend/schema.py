@@ -53,3 +53,31 @@ class ContactsCreate(BaseModel):
     postal_code: str
     organization_id: int
 
+class OrganizationsUpdate(BaseModel):
+    name: str | None = Field(default=None, title="Name of the organization")
+    email: str | None = Field(default=None, title="Email of the organization")
+    phone: str | None = Field(default=None, title="Phone of the organization")
+    address: str | None = Field(default=None, title="Address of the organization")
+    city: str | None = Field(default=None, title="City of the organization")
+    province: str | None = Field(default=None, title="Province of the organization")
+    country: str | None = Field(default=None, title="Country of the organization")
+    postal_code: str | None = Field(default=None, title="Postal code of the organization")
+
+class ContactsUpdate(BaseModel):
+    first_name: str | None = Field(default=None, title="First name of the contact")
+    last_name: str | None = Field(default=None, title="Last name of the contact")
+    email: str | None = Field(default=None, title="Email of the contact")
+    phone: str | None = Field(default=None, title="Phone of the contact")
+    address: str | None = Field(default=None, title="Address of the contact")
+    city: str | None = Field(default=None, title="City of the contact")
+    province: str | None = Field(default=None, title="Province of the contact")
+    country: str | None = Field(default=None, title="Country of the contact")
+    postal_code: str | None = Field(default=None, title="Postal code of the contact")
+
+    organization_id: int | None = Field(default=None, title="Organization ID of the contact")
+
+class OrganizationDelete(BaseModel):
+    message: str = Field(default="Organization deleted successfully")
+
+class ContactDelete(BaseModel):
+    message: str = Field(default="Contact deleted successfully")
