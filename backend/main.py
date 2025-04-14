@@ -151,4 +151,25 @@ def delete_organization(organization_id: int) -> OrganizationDelete:
     db.delete(db_organization)
     db.commit()
 
-    return {"id": organization_id}
+    return {
+        "message": "Organization deleted successfully {id: " + str(organization_id) + "}",
+        "status_code": 200
+        }
+
+@app.delete("/contact/{contact_id}", response_model=ContactDelete)
+def delete_contact(contact_id: int) -> ContactDelete:
+    db: Session = next(get_db())
+
+    # Find the contact
+    db_contact = db.query(Contacts).filter(Contacts.id == contact_id).first()
+    if db_contact is None:
+        raise HTTPException(status_code=404, detail="Contact not found")
+
+    # Delete the contact
+    db.delete(db_contact)
+    db.commit()
+
+    return {
+        "message": "Contact deleted successfully {id: " + str(contact_id) + "}",
+        "status_code": 200
+        }
