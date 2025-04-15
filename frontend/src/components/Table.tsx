@@ -1,7 +1,7 @@
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 interface TableProps {
-    data?: { name: string, city: string, phone: string }[];
+    data?: { id: number ,name: string | undefined ,first_name: string | undefined, city: string, phone: string, last_name: string| undefined }[];
     tableHead?: string[];
     link: string
 }
@@ -25,22 +25,22 @@ const Table = (props: TableProps) => {
                     {data.map((item, index) => (
                         <tr key={index} className="focus-within:bg-gray-100 hover:bg-gray-100 cursor-pointer">
                             <td className="px-5 py-3 border-t border-gray-200 text-sm whitespace-nowrap">
-                                <a href={link}>
-                                    <p className="text-gray-900">{item.name}</p>
+                                <a href={`${link}/${item.id}/edit`}>
+                                    <p className="text-gray-900">{item.name == undefined ? `${item.first_name} ${item.last_name}` : item.name} </p>
                                 </a>
                             </td>
                             <td className="px-5 py-3 border-t border-gray-200 text-sm whitespace-nowrap">
-                                <a href={link}>
+                                <a href={`${link}/${item.id}/edit`}>
                                     <p className="text-gray-900">{item.city}</p>
                                 </a>
                             </td>
                             <td className="px-5 py-3 border-t border-gray-200 text-sm whitespace-nowrap">
-                                <a href={link}>
+                                <a href={`${link}/${item.id}/edit`}>
                                     <p className="text-gray-900">{item.phone}</p>
                                 </a>
                             </td>
                             <td className="px-5 py-3 border-t border-gray-200 text-sm text-right">
-                                <a href={link}>
+                                <a href={`${link}/${item.id}/edit`}>
                                     <MdOutlineArrowForwardIos className="h-4 w-4 text-gray-500" />
                                 </a>
                             </td>

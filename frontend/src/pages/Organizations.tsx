@@ -3,7 +3,7 @@ import Search from '../components/Search';
 import Table from '../components/Table';
 import CreateOrganization from '../components/CreateOrganization';
 import useForm from "./../hooks/useForm"
-
+import axiosConfig from '../Fetch/axiosConfig';
 
 interface inputFields {
   id: number,
@@ -15,19 +15,38 @@ interface inputFields {
 
 const OrganizationsPage = () => {
   const [openCreateOrganization, setOpenCreateOrganization] = React.useState(false)
+  const [data, setData] = React.useState([])
   const tableHaed = [
     "Name",
     "City",
     "Phone"
   ]
-  const data = [
-    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  ]
+  // const data = [
+  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
+  // ]
+
+  const [shouldFetch, setShouldFetch] = React.useState(true);
+
+  React.useEffect(() => {
+    if (shouldFetch) {
+      axiosConfig.get('/organizations')
+        .then((response) => {
+          setData(response.data);
+          console.log(response.data);
+          setShouldFetch(false);
+        })
+        .catch((error) => {
+          alert('Error fetching data: ' + error);
+          console.log(error);
+        }
+        );
+    }
+  }, [shouldFetch]);
 
   const inputFields: inputFields[] = [
     { id: 1, name: 'name', type: 'text', placeholder: 'Name', option: false },
@@ -73,7 +92,7 @@ const OrganizationsPage = () => {
           <Table
             data={data}
             tableHead={tableHaed}
-            link="/organization/1/edit"
+            link="/organization"
           />
         </div>
 

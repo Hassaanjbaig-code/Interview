@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import Form from '../components/Form';
 import useForm from '../hooks/useForm';
+import axiosConfig from '../Fetch/axiosConfig';
+import { useParams } from 'react-router-dom';
 
 interface InputField {
     id: number,
@@ -12,6 +14,19 @@ interface InputField {
 }
 
 const ContactEditPages = () => {
+    const [data, setData] = React.useState(null)
+    const { id } = useParams()
+    axiosConfig.get(`/contacts/${id}`)
+        .then((response) => {
+            console.log(response.data)
+            setData(response.data);
+        })
+        .catch((error) => {
+            alert('Error fetching data: ' + error);
+            console.log(error);
+        }
+        );
+
     const { values, handleChange } = useForm({
         firstname: 'Ernser-Schmitt',
         lastname: 'Ernser-Schmitt',
@@ -46,7 +61,7 @@ const ContactEditPages = () => {
         <div className="bg-gray-100 flex-1 p-6">
             <div className="mb-4">
                 <h1 className="text-xl font-bold text-gray-700">
-                    <Link to="/contact" className="text-indigo-500 hover:underline font-bold">
+                    <Link to="/contacts" className="text-indigo-500 hover:underline font-bold">
                         Contact
                     </Link>
                     <span className="text-gray-500 mx-2">/</span>

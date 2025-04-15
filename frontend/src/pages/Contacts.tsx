@@ -3,6 +3,7 @@ import CreateOrganization from "../components/CreateOrganization";
 import Search from "../components/Search";
 import Table from "../components/Table";
 import useForm from "./../hooks/useForm";
+import axiosConfig from "../Fetch/axiosConfig";
 
 interface inputFields {
   id: number,
@@ -21,14 +22,6 @@ const Contacts = () => {
     "City",
     "Phone"
   ]
-  const data = [
-    { name: 'Ernser-Schmitt', organization: "Kock-Bins", city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', organization: "Kock-Bins", city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', organization: "Kock-Bins", city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', organization: "Kock-Bins", city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', organization: "Kock-Bins", city: 'South Tylerland', phone: '104-069-8858' },
-    { name: 'Ernser-Schmitt', organization: "Kock-Bins", city: 'South Tylerland', phone: '104-069-8858' },
-  ]
   const { values, handleChange } = useForm({
     FirstName: '',
     LastName: '',
@@ -41,6 +34,20 @@ const Contacts = () => {
     Country: '',
     PostalCode: '',
   });
+
+  const [data, setData] = React.useState([])
+
+  React.useEffect(() => {
+    axiosConfig.get('/contacts')
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        alert('Error fetching data: ' + error);
+        console.log(error);
+      }
+      );
+  }, []);
 
   const inputFields: inputFields[] = [
     { id: 1, name: 'firstName', type: 'text', placeholder: 'FirstName', option: false },
