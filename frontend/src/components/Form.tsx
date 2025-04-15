@@ -2,20 +2,21 @@ import React from 'react'
 import Input from './Input'
 import Option from './Option'
 
+export interface FormField {
+    id: number;
+    name: string;
+    type: string;
+    placeholder: string;
+    option: boolean | null;
+    optionPass ?: {
+        id: number
+        value: string
+        label: string
+    }[];
+}
 
 interface FormType {
-    inputFields: {
-        id: number;
-        name: string;
-        type: string;
-        placeholder: string;
-        option: boolean | null;
-        optionPass?: {
-            id: number
-            value: string
-            label: string
-        }[];
-    }[];
+    inputFields: FormField[];
     values: Record<string, any>; // Allow values to have mixed types
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     className?: string;
@@ -23,7 +24,6 @@ interface FormType {
 
 
 const Form = ({ inputFields, values, onChange, className = "" }: FormType) => {
-    console.log("This is the page where we need to use",inputFields[2].optionPass)
     return (
         <div className={`${className} grid grid-cols-1 md:grid-cols-2 gap-4`}>
             {inputFields.map((field) =>

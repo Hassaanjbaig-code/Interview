@@ -4,14 +4,7 @@ import Table from '../components/Table';
 import CreateOrganization from '../components/CreateOrganization';
 import useForm from "./../hooks/useForm"
 import axiosConfig from '../Fetch/axiosConfig';
-
-interface inputFields {
-  id: number,
-  name: string,
-  type: string,
-  placeholder: string
-  option: boolean | null
-}
+import { inputFields } from "../type"
 
 const OrganizationsPage = () => {
   const [openCreateOrganization, setOpenCreateOrganization] = React.useState(false)
@@ -21,14 +14,6 @@ const OrganizationsPage = () => {
     "City",
     "Phone"
   ]
-  // const data = [
-  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  //   { name: 'Ernser-Schmitt', city: 'South Tylerland', phone: '104-069-8858' },
-  // ]
 
   const [shouldFetch, setShouldFetch] = React.useState(true);
 
@@ -55,7 +40,11 @@ const OrganizationsPage = () => {
     { id: 4, name: 'address', type: 'text', placeholder: 'Address', option: false },
     { id: 5, name: 'city', type: 'text', placeholder: 'City', option: false },
     { id: 6, name: 'province', type: 'text', placeholder: 'Province', option: false },
-    { id: 7, name: 'country', type: 'text', placeholder: 'Country', option: true },
+    {
+      id: 7, name: 'country', type: 'text', placeholder: 'Country', option: true, optionPass: [{ value: 'us', label: 'United States', id: 1 },
+      { value: 'ca', label: 'Canada', id: 2 },
+      ]
+    },
     { id: 8, name: 'postalCode', type: 'text', placeholder: 'Postal Code', option: false },
   ];
 

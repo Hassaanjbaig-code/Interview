@@ -5,18 +5,7 @@ import Table from "../components/Table";
 import useForm from "./../hooks/useForm";
 import axiosConfig from "../Fetch/axiosConfig";
 import Loading from "../components/Loading";
-interface inputFields {
-  id: number,
-  name: string,
-  type: string,
-  placeholder: string
-  option: boolean | null
-  optionPass?: {
-    id: number,
-    label: string,
-    value: string
-  }[]
-}
+import { inputFields } from "../type"
 
 
 const Contacts = () => {
@@ -95,15 +84,13 @@ const Contacts = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitted:', values);
     axiosConfig.post('/contacts', values)
-      .then((response) => {
-        console.log('Contact created:', response.data);
+      .then(() => {
         setOpenCreateContact(false)
         setLoading(true)
       })
       .catch((error) => {
-        console.error('Error creating contact:', error);
+        console.error("Error for submitting",error)
         setLoading(false)
       })
       .finally(() => {
@@ -111,7 +98,6 @@ const Contacts = () => {
       });
   };
   if (loading) return <Loading message="Contact is Loading" />
-  console.log("Main page", inputFields[2].optionPass)
   return (
     <section className="flex-1 md:p-6 p-2">
       <div className="flex items-center justify-between mb-4">

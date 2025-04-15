@@ -4,15 +4,9 @@ import Form from '../components/Form';
 import useForm from '../hooks/useForm';
 import axiosConfig from '../Fetch/axiosConfig';
 import { useParams, useNavigate } from 'react-router-dom';
-import Loading from "../components/Loading"
+import Loading from "../components/Loading";
+import { inputFields } from "../type";
 
-interface InputField {
-    id: number,
-    name: string,
-    type: string,
-    placeholder: string,
-    option: boolean | null
-}
 
 const ContactEditPages = () => {
     const [loading, setLoading] = React.useState(false)
@@ -41,22 +35,33 @@ const ContactEditPages = () => {
 
     }, [id]);
 
-    const inputFields: InputField[] = [
+    const inputFields: inputFields[] = [
         { id: 1, name: 'first_name', type: 'text', placeholder: 'FirstName', option: false },
         { id: 2, name: 'last_name', type: 'text', placeholder: 'LastName', option: false },
         { id: 4, name: 'email', type: 'email', placeholder: 'Email', option: false },
         { id: 5, name: 'phone', type: 'text', placeholder: 'Phone', option: false },
         { id: 6, name: 'address', type: 'text', placeholder: 'Address', option: false },
         { id: 7, name: 'city', type: 'text', placeholder: 'City', option: false },
-        { id: 8, name: 'province', type: 'text', placeholder: 'Province', option: false },
-        { id: 9, name: 'country', type: 'text', placeholder: 'Country', option: true },
-        { id: 10, name: 'postal_code', type: 'text', placeholder: 'Postal Code', option: false }
+        {
+            id: 8, name: 'province', type: 'text', placeholder: 'Province', option: false
+        },
+        {
+            id: 9, name: 'country', type: 'text', placeholder: 'Country', option: true, optionPass: [
+                { value: 'us', label: 'United States', id: 1 },
+                { value: 'ca', label: 'Canada', id: 2 },
+            ]
+        },
+        { id: 10, name: 'postal_code', type: 'text', placeholder: 'Postal Code', option: false },
     ];
+
 
     const ContactDelete = () => {
         axiosConfig.delete(`/contact/${id}`)
             .then(() => setLoading(true))
-            .catch((er) => console.error(er))
+            .catch((er) => {
+                console.error(er)
+                setLoading(false)
+            })
             .finally(() => {
                 setLoading(false);
                 navigate("/contacts");
@@ -71,7 +76,7 @@ const ContactEditPages = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        axiosConfig.put(`/contact${id}`, values)
+        axiosConfig.put(`/contact/${id}`, values)
             .then(() => setLoading(true))
             .finally(() => {
                 setLoading(false);

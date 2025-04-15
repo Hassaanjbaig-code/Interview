@@ -24,7 +24,6 @@ interface CreateOrganizationProps {
 }
 
 const CreateOrganization: React.FC<CreateOrganizationProps> = ({ buttonClick, inputFields = [], values, handleChange, handleSubmit, buttonString }) => {
-    // console.log("This is the second Page",inputFields[2].optionPass)
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#8080804f] bg-opacity-50 rounded-sm">
             <div className="rounded-lg shadow-lg w-full max-w-3xl bg-white">
