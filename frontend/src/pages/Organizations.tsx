@@ -4,10 +4,12 @@ import Table from '../components/Table';
 import CreateOrganization from '../components/CreateOrganization';
 import useForm from "./../hooks/useForm"
 import axiosConfig from '../Fetch/axiosConfig';
-import { inputFields } from "../type"
+import { inputFields, Organization } from "../type"
+import Loading from "../components/Loading";
 
 const OrganizationsPage = () => {
   const [openCreateOrganization, setOpenCreateOrganization] = React.useState(false)
+  const [search, setSearch] = React.useState('')
   const [data, setData] = React.useState([])
   const tableHaed = [
     "Name",
@@ -16,6 +18,7 @@ const OrganizationsPage = () => {
   ]
 
   const [shouldFetch, setShouldFetch] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (shouldFetch) {
@@ -45,7 +48,7 @@ const OrganizationsPage = () => {
       { value: 'ca', label: 'Canada', id: 2 },
       ]
     },
-    { id: 8, name: 'postalCode', type: 'text', placeholder: 'Postal Code', option: false },
+    { id: 8, name: 'postal_code', type: 'text', placeholder: 'Postal Code', option: false },
   ];
 
   const { values, handleChange } = useForm({
@@ -63,7 +66,42 @@ const OrganizationsPage = () => {
     e.preventDefault();
     console.log('Submitted:', values);
     // Add submission logic here (e.g., API call)
+
+    axiosConfig.post('/organizations', values)
+      .then(() => {
+        setOpenCreateOrganization(false)
+        setLoading(true)
+      })
+      .catch((error) => {
+        console.error("Error for submitting", error)
+        setLoading(false)
+      })
+      .finally(() => {
+        axiosConfig.get('/organizations')
+          .then((response) => {
+            setData(response.data);
+            console.log(response.data);
+            setShouldFetch(false);
+          })
+          .catch((error) => {
+            alert('Error fetching data: ' + error);
+            console.log(error);
+          }
+          );
+          setLoading(false)
+      });
   };
+
+  const filteredData = React.useMemo(() => {
+    if (!search.trim()) return data;
+
+    return data.filter((item: Organization) => {
+      return item.name.toLowerCase().includes(search.toLowerCase());
+    });
+  }, [search, data]);
+
+
+  if (loading) return <Loading message="Organization is Adding" />
   return (
     <section className="flex-1 md:p-6 p-2">
       <div className="flex items-center justify-between mb-4">
@@ -72,14 +110,15 @@ const OrganizationsPage = () => {
 
       <div className="md:p-6 p-2">
         <Search
-          onSearch={(searchTerm) => console.log(searchTerm)}
           buttonClick={setOpenCreateOrganization}
           valueButton={openCreateOrganization}
           button="Create Organization"
+          setSearch={setSearch}
+          search={search}
         />
         <div className="overflow-x-auto rounded-sm bg-white shadow-sm">
           <Table
-            data={data}
+            data={filteredData}
             tableHead={tableHaed}
             link="/organization"
           />

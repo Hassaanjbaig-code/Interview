@@ -5,12 +5,13 @@ import Table from "../components/Table";
 import useForm from "./../hooks/useForm";
 import axiosConfig from "../Fetch/axiosConfig";
 import Loading from "../components/Loading";
-import { inputFields } from "../type"
+import { inputFields, Contact } from "../type"
 
 
 const Contacts = () => {
   const [openCreateContact, setOpenCreateContact] = React.useState(false)
   const [orgName, setOrgName] = React.useState<{ id: number; name: string; }[]>([])
+  const [search, setSearch] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const tableHaed = [
     "Name",
@@ -90,13 +91,23 @@ const Contacts = () => {
         setLoading(true)
       })
       .catch((error) => {
-        console.error("Error for submitting",error)
+        console.error("Error for submitting", error)
         setLoading(false)
       })
       .finally(() => {
         setLoading(false)
       });
   };
+  const filteredData = React.useMemo(() => {
+    if (!search.trim()) return data;
+
+    return data.filter((item: Contact) => {
+      const name = (item.first_name + " " + item.last_name).toLowerCase();
+      return name.includes(search.toLowerCase());
+    });
+  }, [search, data]);
+
+
   if (loading) return <Loading message="Contact is Loading" />
   return (
     <section className="flex-1 md:p-6 p-2">
@@ -106,14 +117,15 @@ const Contacts = () => {
 
       <div className="p-6">
         <Search
-          onSearch={(searchTerm) => console.log(searchTerm)}
           buttonClick={setOpenCreateContact}
           valueButton={openCreateContact}
           button="Create Contact"
+          search={search}
+          setSearch={setSearch}
         />
         <div className="overflow-x-auto rounded-sm bg-white shadow-sm">
           <Table
-            data={data}
+            data={filteredData}
             tableHead={tableHaed}
             link="/contact"
           />

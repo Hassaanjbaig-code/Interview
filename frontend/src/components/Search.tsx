@@ -3,15 +3,16 @@ import { FaSearch } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 
 interface SearchProps {
-    onSearch: (searchTerm: string) => void;
+    onSearch?: (searchTerm: string) => void;
     buttonClick?: React.Dispatch<React.SetStateAction<boolean>>;
     valueButton: boolean;
     button: string
+    search: string
+    setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Search = (props: SearchProps) => {
-    const { onSearch, buttonClick, valueButton, button } = props
-    const [search, setSearch] = React.useState('')
+    const { buttonClick, valueButton, button, search, setSearch } = props;
     return (
         <div className="flex items-center justify-between mb-4">
             <div className="flex items-center mr-4 w-full max-w-md">

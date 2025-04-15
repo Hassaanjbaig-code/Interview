@@ -10,3 +10,32 @@ export interface inputFields {
       value: string
     }[]
   }
+
+  export interface Contact {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    province: string;
+    country: string;
+    postal_code: string;
+    organization_id: number;
+  }
+
+
+  export interface Organization {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    province: string;
+    country: string;
+    postal_code: string;
+  }
+  
+  
