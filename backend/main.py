@@ -12,6 +12,7 @@ from schema import (
     ContactsUpdate,
     OrganizationDelete,
     ContactDelete,
+    OrganizationNameOnly,
 )
 
 app = FastAPI()
@@ -132,3 +133,10 @@ def delete_contact(contact_id: int, db: Session = Depends(get_db)) -> ContactDel
         "message": "Contact deleted successfully {id: " + str(contact_id) + "}",
         "status_code": 200
     }
+
+@app.get("/organization/names", response_model=list[OrganizationNameOnly])
+def read_all_organization_names(db: Session = Depends(get_db)) -> list[OrganizationNameOnly]:
+    organizations = db.query(Organizations).all()
+    if not organizations:
+        raise HTTPException(status_code=404, detail="No organizations found")
+    return [{"id": org.id, "name": org.name} for org in organizations]

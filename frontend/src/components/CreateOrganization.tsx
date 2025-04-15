@@ -7,6 +7,11 @@ interface InputField {
     type: string;
     placeholder: string;
     option: boolean | null;
+    optionPass?: {
+        id: number
+        value: string
+        label: string
+    }[]
 }
 
 interface CreateOrganizationProps {
@@ -19,13 +24,13 @@ interface CreateOrganizationProps {
 }
 
 const CreateOrganization: React.FC<CreateOrganizationProps> = ({ buttonClick, inputFields = [], values, handleChange, handleSubmit, buttonString }) => {
-
+    // console.log("This is the second Page",inputFields[2].optionPass)
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#8080804f] bg-opacity-50 rounded-sm">
             <div className="rounded-lg shadow-lg w-full max-w-3xl bg-white">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 bg-[#f3f4f6] shadow-md">
-                    <h2 className="text-lg font-semibold text-gray-800">Create Organization</h2>
+                    <h2 className="text-lg font-semibold text-gray-800">{buttonString}</h2>
                     <button
                         onClick={() => buttonClick?.(false)}
                         className="text-gray-500 hover:text-gray-700 text-xl cursor-pointer"

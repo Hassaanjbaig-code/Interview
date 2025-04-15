@@ -8,28 +8,38 @@ interface OptionProps {
     className_label: string;
     className_input: string;
     option: {
+        id: number;
         value: string;
         label: string;
     }[];
 }
 
-const Option = (props: OptionProps) => {
-    const { onChange, name, value, placeholder, className_label, className_input, option } = props;
-
+const Option = ({
+    onChange,
+    name,
+    value,
+    placeholder,
+    className_label,
+    className_input,
+    option = [],
+}: OptionProps) => {
     return (
-        <div>
-            <label className={className_label}>
+        <div className="w-full mb-4">
+            <label htmlFor={name} className={className_label}>
                 {name.charAt(0).toUpperCase() + name.slice(1)}:
             </label>
             <select
+                id={name}
                 name={name}
-                value={value}
+                value={value || ''}
                 onChange={onChange}
                 className={className_input}
             >
-                <option value="" disabled>{placeholder}</option>
+                <option value="" disabled>
+                    {placeholder}
+                </option>
                 {option.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
+                    <option key={opt.id} value={opt.value}>
                         {opt.label}
                     </option>
                 ))}

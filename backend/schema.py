@@ -83,3 +83,7 @@ class OrganizationDelete(BaseModel):
 class ContactDelete(BaseModel):
     message: str = Field(default="Contact deleted successfully")
     status_code: int = Field(default=200)
+
+class OrganizationNameOnly(BaseModel):
+    id: int
+    name: str

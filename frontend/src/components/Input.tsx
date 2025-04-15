@@ -11,11 +11,12 @@ interface InputProps {
 }
 
 const Input = (props: InputProps) => {
-    const { name, value, onChange, placeholder, type, className_input, className_label } = props
+    const { name, value, onChange, placeholder, type, className_input, className_label } = props 
+    // console.log(name)
     return (
         <div>
             <label htmlFor={name} className={className_label}>
-                {name.charAt(0).toUpperCase() + name.slice(1)}:
+                {name.replace(/_/g, " ").charAt(0).toUpperCase() + name.replace(/_/g, " ").slice(1)}:
             </label>
             <input
                 type={type}

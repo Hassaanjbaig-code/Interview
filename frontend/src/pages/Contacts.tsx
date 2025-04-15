@@ -4,18 +4,25 @@ import Search from "../components/Search";
 import Table from "../components/Table";
 import useForm from "./../hooks/useForm";
 import axiosConfig from "../Fetch/axiosConfig";
-
+import Loading from "../components/Loading";
 interface inputFields {
   id: number,
   name: string,
   type: string,
   placeholder: string
   option: boolean | null
+  optionPass?: {
+    id: number,
+    label: string,
+    value: string
+  }[]
 }
 
 
 const Contacts = () => {
   const [openCreateContact, setOpenCreateContact] = React.useState(false)
+  const [orgName, setOrgName] = React.useState<{ id: number; name: string; }[]>([])
+  const [loading, setLoading] = React.useState(false)
   const tableHaed = [
     "Name",
     "Organization",
@@ -47,26 +54,64 @@ const Contacts = () => {
         console.log(error);
       }
       );
-  }, []);
+  }, [openCreateContact]);
 
-  const inputFields: inputFields[] = [
-    { id: 1, name: 'firstName', type: 'text', placeholder: 'FirstName', option: false },
-    { id: 1, name: 'lastName', type: 'text', placeholder: 'LastName', option: false },
-    { id: 1, name: 'organization', type: 'text', placeholder: 'Organization', option: false },
-    { id: 2, name: 'email', type: 'email', placeholder: 'Email', option: false },
-    { id: 3, name: 'phone', type: 'text', placeholder: 'Phone', option: false },
-    { id: 4, name: 'address', type: 'text', placeholder: 'Address', option: false },
-    { id: 5, name: 'city', type: 'text', placeholder: 'City', option: false },
-    { id: 6, name: 'province', type: 'text', placeholder: 'Province', option: false },
-    { id: 7, name: 'country', type: 'text', placeholder: 'Country', option: true },
-    { id: 8, name: 'postalCode', type: 'text', placeholder: 'Postal Code', option: false },
-  ];
+  React.useEffect(() => {
+    if (openCreateContact) {
+      axiosConfig.get('/organization/names')
+        .then((res) => {
+          setLoading(true)
+          setOrgName(res.data);
+        })
+        .catch(err => console.error(err))
+        .finally(() => {
+          setLoading(false);
+        })
+    }
+  }, [openCreateContact])
+
+  const inputFields: inputFields[] = React.useMemo(() => [
+    { id: 1, name: 'first_name', type: 'text', placeholder: 'FirstName', option: false },
+    { id: 2, name: 'last_name', type: 'text', placeholder: 'LastName', option: false },
+    {
+      id: 3, name: 'organization_id', type: 'text', placeholder: 'Organization',
+      option: true, optionPass: orgName.map((org) => ({ id: org.id, value: org.id.toString(), label: org.name }))
+    },
+    { id: 4, name: 'email', type: 'email', placeholder: 'Email', option: false },
+    { id: 5, name: 'phone', type: 'text', placeholder: 'Phone', option: false },
+    { id: 6, name: 'address', type: 'text', placeholder: 'Address', option: false },
+    { id: 7, name: 'city', type: 'text', placeholder: 'City', option: false },
+    {
+      id: 8, name: 'province', type: 'text', placeholder: 'Province', option: false
+    },
+    {
+      id: 9, name: 'country', type: 'text', placeholder: 'Country', option: true, optionPass: [
+        { value: 'us', label: 'United States', id: 1 },
+        { value: 'ca', label: 'Canada', id: 2 },
+      ]
+    },
+    { id: 10, name: 'postal_code', type: 'text', placeholder: 'Postal Code', option: false },
+  ], [orgName]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitted:', values);
-    // Add submission logic here (e.g., API call)
+    axiosConfig.post('/contacts', values)
+      .then((response) => {
+        console.log('Contact created:', response.data);
+        setOpenCreateContact(false)
+        setLoading(true)
+      })
+      .catch((error) => {
+        console.error('Error creating contact:', error);
+        setLoading(false)
+      })
+      .finally(() => {
+        setLoading(false)
+      });
   };
+  if (loading) return <Loading message="Contact is Loading" />
+  console.log("Main page", inputFields[2].optionPass)
   return (
     <section className="flex-1 md:p-6 p-2">
       <div className="flex items-center justify-between mb-4">
@@ -127,7 +172,6 @@ const Contacts = () => {
           buttonString="Create Contact"
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          key={Math.random()}
           inputFields={inputFields}
         />
       )}
