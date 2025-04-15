@@ -24,7 +24,7 @@ const Form = ({ inputFields, values, onChange, className= "" }: FormType) => {
                 field.option === false ? (
                     <Input
                         key={field.name}
-                        name={field.name}
+                        name={field.name.replace(/_/g, " ")}
                         value={values[field.name] || ''}
                         onChange={onChange}
                         placeholder={field.placeholder}

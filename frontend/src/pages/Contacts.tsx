@@ -84,7 +84,7 @@ const Contacts = () => {
           <Table
             data={data}
             tableHead={tableHaed}
-            link="/contact/1/edit"
+            link="/contact"
           />
         </div>
 
