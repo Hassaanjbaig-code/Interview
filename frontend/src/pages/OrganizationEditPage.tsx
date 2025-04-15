@@ -60,6 +60,24 @@ const OrganizationEditPage = () => {
         console.error("Failed to update organization", error)
       });
   }
+
+  const onDelete = ((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    axiosConfig.delete(`/organizations/${id}`)
+      .then(() => {
+        setLoading(true)
+      })
+      .finally(() => {
+        // Optionally, redirect or show a success message
+        navigate('/organizations');
+      })
+      .catch(error => {
+        setLoading(false)
+        console.error("Failed to update organization", error)
+      });
+
+  })
   return (
     <div className="bg-gray-100 flex-1 p-6">
       <div className="mb-4">
@@ -124,7 +142,7 @@ const OrganizationEditPage = () => {
           </div>
 
           <div className="flex justify-between mt-6">
-            <button className="text-red-500 hover:text-red-700 focus:outline-none">
+            <button onClick={onDelete} className="text-red-500 hover:text-red-700 focus:outline-none">
               Delete Organization
             </button>
             <button className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
