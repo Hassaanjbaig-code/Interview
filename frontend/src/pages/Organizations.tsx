@@ -4,13 +4,18 @@ import Table from '../components/Table';
 import CreateOrganization from '../components/CreateOrganization';
 import useForm from "./../hooks/useForm"
 import axiosConfig from '../Fetch/axiosConfig';
-import { inputFields, Organization } from "../type"
+import { inputFields, Organization, OrganizationLimit } from "../type"
 import Loading from "../components/Loading";
+import Footer from '../components/Footer';
 
 const OrganizationsPage = () => {
   const [openCreateOrganization, setOpenCreateOrganization] = React.useState(false)
+  const [pagination, setPagination] = React.useState({
+    skip: 0,
+    limit: 10,
+  })
   const [search, setSearch] = React.useState('')
-  const [data, setData] = React.useState([])
+  const [data, setData] = React.useState<OrganizationLimit | null>(null)
   const tableHaed = [
     "Name",
     "City",
@@ -22,10 +27,9 @@ const OrganizationsPage = () => {
 
   React.useEffect(() => {
     if (shouldFetch) {
-      axiosConfig.get('/organizations')
+      axiosConfig.get(`/organizations/?skip=${pagination.skip}&limit=${pagination.limit}`)
         .then((response) => {
           setData(response.data);
-          console.log(response.data);
           setShouldFetch(false);
         })
         .catch((error) => {
@@ -34,7 +38,7 @@ const OrganizationsPage = () => {
         }
         );
     }
-  }, [shouldFetch]);
+  }, [shouldFetch, pagination]);
 
   const inputFields: inputFields[] = [
     { id: 1, name: 'name', type: 'text', placeholder: 'Name', option: false },
@@ -64,8 +68,6 @@ const OrganizationsPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitted:', values);
-    // Add submission logic here (e.g., API call)
 
     axiosConfig.post('/organizations', values)
       .then(() => {
@@ -80,7 +82,6 @@ const OrganizationsPage = () => {
         axiosConfig.get('/organizations')
           .then((response) => {
             setData(response.data);
-            console.log(response.data);
             setShouldFetch(false);
           })
           .catch((error) => {
@@ -88,17 +89,39 @@ const OrganizationsPage = () => {
             console.log(error);
           }
           );
-          setLoading(false)
+        setLoading(false)
       });
   };
 
-  const filteredData = React.useMemo(() => {
-    if (!search.trim()) return data;
+  const filteredOrganization: Organization[] = React.useMemo(() => {
+    if (!data || !data.organization) return [];
+    if (!search) return data.organization;
 
-    return data.filter((item: Organization) => {
-      return item.name.toLowerCase().includes(search.toLowerCase());
+    const filtered = data.organization.filter((item) => {
+      const fullName = item.name.toLowerCase();
+      return fullName.includes(search.toLowerCase());
     });
-  }, [search, data]);
+    return filtered
+  }, [data, search]);
+
+  const handleNextPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setPagination(prev => ({
+      ...prev,
+      skip: prev.skip + prev.limit,
+      limit: prev.limit
+    }));
+  }
+
+  const handlePrevPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pagination.skip === 0 && pagination.limit === 10) return;
+    setPagination(prev => ({
+      ...prev,
+      skip: Math.max(0, prev.skip - prev.limit),
+      limit: prev.limit
+    }));
+  }
 
 
   if (loading) return <Loading message="Organization is Adding" />
@@ -118,44 +141,18 @@ const OrganizationsPage = () => {
         />
         <div className="overflow-x-auto rounded-sm bg-white shadow-sm">
           <Table
-            data={filteredData}
+            data={filteredOrganization}
             tableHead={tableHaed}
             link="/organization"
           />
         </div>
-
-        <div className="py-3 flex items-center justify-between">
-          <div className="flex-1 flex justify-between sm:hidden">
-            <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-              Previous
-            </button>
-            <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-              Next
-            </button>
-          </div>
-          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                <span className="font-medium">97</span> results
-              </p>
-            </div>
-            <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span>Previous</span>
-                </button>
-                <button aria-current="page" className="bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                  1
-                </button>
-                <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span>Next</span>
-                </button>
-              </nav>
-            </div>
-          </div>
-        </div>
       </div>
+      <Footer
+        onNext={handleNextPage}  // Changed from OnNext to onNext
+        onPrev={handlePrevPage}
+        page={data?.Pages}
+        totalResult={data?.totalList}
+      />
       {openCreateOrganization && (
         <CreateOrganization
           buttonClick={setOpenCreateOrganization}

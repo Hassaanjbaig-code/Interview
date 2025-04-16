@@ -1,17 +1,22 @@
-import React from "react"
+import React, { useState } from "react"
 import CreateOrganization from "../components/CreateOrganization";
 import Search from "../components/Search";
 import Table from "../components/Table";
 import useForm from "./../hooks/useForm";
 import axiosConfig from "../Fetch/axiosConfig";
 import Loading from "../components/Loading";
-import { inputFields, Contact } from "../type"
+import { inputFields, ContactLimit, Contact } from "../type";
+import Footer from "../components/Footer";
 
 
 const Contacts = () => {
   const [openCreateContact, setOpenCreateContact] = React.useState(false)
   const [orgName, setOrgName] = React.useState<{ id: number; name: string; }[]>([])
   const [search, setSearch] = React.useState('')
+  const [pagination, setPagination] = useState({
+    skip: 0,
+    limit: 10
+  })
   const [loading, setLoading] = React.useState(false)
   const tableHaed = [
     "Name",
@@ -32,10 +37,10 @@ const Contacts = () => {
     PostalCode: '',
   });
 
-  const [data, setData] = React.useState([])
+  const [data, setData] = React.useState<ContactLimit | null>(null)
 
   React.useEffect(() => {
-    axiosConfig.get('/contacts')
+    axiosConfig.get(`/contacts/?skip=${pageXOffset}&limit=${pagination.limit}`)
       .then((response) => {
         setData(response.data);
       })
@@ -44,7 +49,7 @@ const Contacts = () => {
         console.log(error);
       }
       );
-  }, [openCreateContact]);
+  }, [openCreateContact, pagination]);
 
   React.useEffect(() => {
     if (openCreateContact) {
@@ -98,14 +103,37 @@ const Contacts = () => {
         setLoading(false)
       });
   };
-  const filteredData = React.useMemo(() => {
-    if (!search.trim()) return data;
 
-    return data.filter((item: Contact) => {
-      const name = (item.first_name + " " + item.last_name).toLowerCase();
-      return name.includes(search.toLowerCase());
+  const filteredContacts: Contact[] = React.useMemo(() => {
+    if (!data || !data.contact) return [];
+    if (!search) return data.contact;
+
+    const filtered = data.contact.filter((item) => {
+      const fullName = `${item.first_name} ${item.last_name}`.toLowerCase();
+      return fullName.includes(search.toLowerCase());
     });
-  }, [search, data]);
+    return filtered
+  }, [data, search]);
+
+
+  const handleNextPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setPagination(prev => ({
+      ...prev,
+      skip: prev.skip + prev.limit,
+      limit: prev.limit
+    }));
+  }
+
+  const handlePrevPage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pagination.skip === 0 && pagination.limit === 10) return;
+    setPagination(prev => ({
+      ...prev,
+      skip: Math.max(0, prev.skip - prev.limit),
+      limit: prev.limit
+    }));
+  }
 
 
   if (loading) return <Loading message="Contact is Loading" />
@@ -125,44 +153,18 @@ const Contacts = () => {
         />
         <div className="overflow-x-auto rounded-sm bg-white shadow-sm">
           <Table
-            data={filteredData}
+            data={filteredContacts}
             tableHead={tableHaed}
             link="/contact"
           />
         </div>
-
-        <div className="py-3 flex items-center justify-between">
-          <div className="flex-1 flex justify-between sm:hidden">
-            <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-              Previous
-            </button>
-            <button className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-              Next
-            </button>
-          </div>
-          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                <span className="font-medium">97</span> results
-              </p>
-            </div>
-            <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                <button className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span>Previous</span>
-                </button>
-                <button aria-current="page" className="bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                  1
-                </button>
-                <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                  <span>Next</span>
-                </button>
-              </nav>
-            </div>
-          </div>
-        </div>
       </div>
+      <Footer
+        onNext={handleNextPage}  // Changed from OnNext to onNext
+        onPrev={handlePrevPage}
+        page={data?.Pages}
+        totalResult={data?.totalList}
+      />
       {openCreateContact && (
         <CreateOrganization
           buttonClick={setOpenCreateContact}

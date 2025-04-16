@@ -1,7 +1,7 @@
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 interface TableProps {
-    data?: { id: number ,name: string | undefined ,first_name: string | undefined, city: string, phone: string, last_name: string| undefined }[];
+    data?: { id: number ,name?: string | undefined ,first_name?: string | undefined, city: string, phone: string, last_name?: string| undefined }[] | undefined ;
     tableHead?: string[];
     link: string
 }

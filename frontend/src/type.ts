@@ -25,7 +25,13 @@ export interface inputFields {
     organization_id: number;
   }
 
-
+  export interface ContactLimit {
+    contact: Contact[];
+    totalList: number;
+    Pages: number;
+  } 
+  
+  
   export interface Organization {
     id: number;
     name: string;
@@ -37,5 +43,10 @@ export interface inputFields {
     country: string;
     postal_code: string;
   }
+    export interface OrganizationLimit {
+      organization: Organization[];
+      totalList: number;
+      Pages: number;
+    } 
   
   
