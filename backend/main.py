@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal
@@ -17,11 +19,13 @@ from schema import (
     OrganizationNameOnly,
 )
 
+load_dotenv()
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Or "*" for all
+    allow_origins= [os.getenv('FRONTEND_URL')],  # Or "*" for all
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
